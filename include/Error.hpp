@@ -7,7 +7,8 @@
 
 class Error : public std::runtime_error {
     public:
-        explicit Error(const std::string &message) : std::runtime_error(message) {}
+        explicit Error(const std::string &message)
+            : std::runtime_error("\033[1;31m" + message + "\033[0m") {}
 };
 
 class ErrorHandling {
