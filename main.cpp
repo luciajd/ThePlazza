@@ -1,7 +1,9 @@
-#include <iostream>
+#include "Reception.hpp"
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    Reception reception;
+    reception.start();
+
     return 0;
 }
