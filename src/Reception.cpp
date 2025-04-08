@@ -49,11 +49,7 @@ bool Reception::processOrder(const std::string &input)
         try {
             Order order = parseOrder(orderStr);
             _orders.push(order);
-            std::cout << "\033[1;32mOrder received:\033[0m "
-                << "Pizza: " << order.type
-                << ", size: " << order.size
-                << ", quantity: " << order.quantity
-            << std::endl;
+            dispatchOrders();
         } catch (const Error &e) {
             std::cerr << e.what() << std::endl;
             return false;
@@ -63,3 +59,57 @@ bool Reception::processOrder(const std::string &input)
     return true;
 }
 
+void Reception::dispatchOrders()
+{
+    while (!_orders.empty()) {
+        Order order = _orders.front();
+        _orders.pop();
+
+        int pizzaRemaining = order.quantity;
+
+        bool kitchenAvailable = false;
+        for (auto &kitchen : _kitchens) {
+            if (kitchen.canAcceptOrder()) {
+                kitchenAvailable = true;
+                break;
+            }
+        }
+        if (!kitchenAvailable) {
+            createKitchen();
+        }
+
+        std::cout << "\033[1;32mOrder received:\033[0m "
+                  << "Pizza: " << order.type
+                  << ", size: " << order.size
+                  << ", quantity: " << order.quantity
+                  << std::endl;
+
+        while (pizzaRemaining > 0) {
+            bool assigned = false;
+            for (auto &kitchen : _kitchens) {
+                if (kitchen.canAcceptOrder()) {
+                    kitchen.assignOrder(order.type, order.size);
+                    pizzaRemaining--;
+                    assigned = true;
+                    break;
+                }
+            }
+
+            if (!assigned) {
+                createKitchen();
+            }
+        }
+    }
+}
+
+
+
+void Reception::createKitchen()
+{
+    int cooksPerKitchen = 5;
+    int maxPizzas = cooksPerKitchen * 2;
+
+    Kitchen newKitchen(_kitchenCounter++, cooksPerKitchen, maxPizzas);
+    _kitchens.push_back(std::move(newKitchen));
+    std::cout << "\033[1;34mNew kitchen created with ID: " << newKitchen.getId() << "\033[0m" << std::endl;
+}

@@ -3,6 +3,7 @@
 
 #include "Pizza.hpp"
 #include "Error.hpp"
+#include "Kitchen.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -21,15 +22,15 @@ class Reception {
         ~Reception();
 
         void start();
-    private:
-        float _timeMultiplier;
-        int _cooksPerKitchen;
-        int _restockTime;
-        std::queue<Order> _orders;
-        
         Order parseOrder(const std::string &order);
         bool processOrder(const std::string &input);
-        
+    private:
+        std::queue<Order> _orders;
+        std::vector<Kitchen> _kitchens;
+
+        void dispatchOrders();
+        void createKitchen();
+        int _kitchenCounter = 0;
 };
 
 #endif // RECEPTION_HPP
