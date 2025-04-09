@@ -27,3 +27,14 @@ int Kitchen::getId() const
 {
     return _id;
 }
+
+int Kitchen::getMaxCapacity() const
+{
+    return _maxCapacity;
+}
+
+std::string Kitchen::getStockStatus() const
+{
+    return "Kitchen " + std::to_string(_id) + " | Current load: " + std::to_string(_currentOrders) +
+           " / Max: " + std::to_string(_maxCapacity);
+}

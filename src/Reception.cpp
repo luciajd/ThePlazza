@@ -17,6 +17,11 @@ void Reception::start()
             break;
         }
 
+        if (input == "status") {
+            printStatus();
+            continue;
+        }
+
         if (!processOrder(input)) {
             std::cout << "\033[1;31m" << "Invalid order. Please try again." << "\033[0m" << std::endl;
         }
@@ -102,8 +107,6 @@ void Reception::dispatchOrders()
     }
 }
 
-
-
 void Reception::createKitchen()
 {
     int cooksPerKitchen = 5;
@@ -112,4 +115,23 @@ void Reception::createKitchen()
     Kitchen newKitchen(_kitchenCounter++, cooksPerKitchen, maxPizzas);
     _kitchens.push_back(std::move(newKitchen));
     std::cout << "\033[1;34mNew kitchen created with ID: " << newKitchen.getId() << "\033[0m" << std::endl;
+}
+
+void Reception::printStatus() const
+{
+    if (_kitchens.empty()) {
+        std::cout << "\033[1;33mNo kitchens available.\033[0m" << std::endl;
+        return;
+    }
+
+    std::cout << "\033[1;36m--- Kitchen Status ---\033[0m" << std::endl;
+
+    for (const auto &kitchen : _kitchens) {
+        std::cout << "Kitchen " << kitchen.getId()
+        << " | Current load: " << kitchen.getOrders()
+        << " / Max: " << kitchen.getMaxCapacity()
+        << std::endl;
+    }
+
+    std::cout << "\033[1;36m----------------------\033[0m" << std::endl;
 }

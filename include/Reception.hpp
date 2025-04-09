@@ -30,6 +30,7 @@ class Reception {
 
         void dispatchOrders();
         void createKitchen();
+        void printStatus() const;
         int _kitchenCounter = 0;
 };
 

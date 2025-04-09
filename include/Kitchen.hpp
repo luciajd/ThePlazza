@@ -13,6 +13,8 @@ class Kitchen {
         void assignOrder(const std::string &type, const std::string &size);
         int getOrders() const;
         int getId() const;
+        int getMaxCapacity() const;
+        std::string getStockStatus() const;
 
     private:
         int _id;
