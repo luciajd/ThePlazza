@@ -29,6 +29,7 @@ class Reception {
         std::vector<Kitchen> _kitchens;
 
         void dispatchOrders();
+        void dispatchToKitchen(const Order &order);
         void createKitchen();
         void printStatus() const;
         int _kitchenCounter = 0;

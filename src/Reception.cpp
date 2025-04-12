@@ -70,8 +70,6 @@ void Reception::dispatchOrders()
         Order order = _orders.front();
         _orders.pop();
 
-        int pizzaRemaining = order.quantity;
-
         bool kitchenAvailable = false;
         for (auto &kitchen : _kitchens) {
             if (kitchen.canAcceptOrder()) {
@@ -83,26 +81,33 @@ void Reception::dispatchOrders()
             createKitchen();
         }
 
-        std::cout << "\033[1;32mOrder received:\033[0m "
-                  << "Pizza: " << order.type
-                  << ", size: " << order.size
-                  << ", quantity: " << order.quantity
-                  << std::endl;
+        dispatchToKitchen(order);
+    }
+}
 
-        while (pizzaRemaining > 0) {
-            bool assigned = false;
-            for (auto &kitchen : _kitchens) {
-                if (kitchen.canAcceptOrder()) {
-                    kitchen.assignOrder(order.type, order.size);
-                    pizzaRemaining--;
-                    assigned = true;
-                    break;
-                }
-            }
+void Reception::dispatchToKitchen(const Order &order)
+{
+    int pizzaRemaining = order.quantity;
+    
+    std::cout << "\033[1;32mOrder received:\033[0m "
+    << "Pizza: " << order.type
+    << ", size: " << order.size
+    << ", quantity: " << order.quantity
+    << std::endl;
 
-            if (!assigned) {
-                createKitchen();
+    while (pizzaRemaining > 0) {
+        bool assigned = false;
+        for (auto& kitchen : _kitchens) {
+            if (kitchen.canAcceptOrder()) {
+                kitchen.assignOrder(order.type, order.size);
+                pizzaRemaining--;
+                assigned = true;
+                break;
             }
+        }
+
+        if (!assigned) {
+            createKitchen();
         }
     }
 }
